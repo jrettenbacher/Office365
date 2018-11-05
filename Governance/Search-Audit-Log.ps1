@@ -9,7 +9,7 @@ Import-PSSession $session -AllowClobber
 
 ## Search Unified Audit Log 
 Search-UnifiedAuditLog -StartDate 5/3/2018 -EndDate 5/30/2018 -ResultSize 10 | Get-Member
-Search-UnifiedAuditLog -StartDate 5/3/2018 -EndDate 5/30/2018 -ResultSize 1000  | select Operations, RecordType, UserIds, CreationDate   ##(Get-Date).AddDay(-30)
+Search-UnifiedAuditLog -StartDate 5/3/2018 -EndDate 5/30/2018 -ResultSize 1000  | Select-Object Operations, RecordType, UserIds, CreationDate   ##(Get-Date).AddDay(-30)
 Search-UnifiedAuditLog -StartDate 5/3/2018 -EndDate 5/30/2018 -RecordType SharePoint  -ResultSize 10
 
 ###### https://github.com/DevScope/powerbi-powershell-modules/tree/master/Modules/PowerBIPS
@@ -40,7 +40,7 @@ $dataSetSchema = @{
 $createdDataSet = New-PBIDataSet -authToken $authToken -dataSet $dataSetSchema -Verbose 
 
 #Get detailed informations concerning mail trafic
-$myDatas = Search-UnifiedAuditLog -StartDate 5/3/2018 -EndDate 5/30/2018 -ResultSize 1000  | select Operations, RecordType, UserIds, CreationDate   ##(Get-Date).AddDay(-30)
+$myDatas = Search-UnifiedAuditLog -StartDate 5/3/2018 -EndDate 5/30/2018 -ResultSize 1000  | Select-Object Operations, RecordType, UserIds, CreationDate   ##(Get-Date).AddDay(-30)
 
 
 #Inserting data 10 by 10
@@ -56,7 +56,7 @@ Set-ExecutionPolicy Unrestricted
 
 Connect-MsolService -Credential $credential
 
-Get-Mailbox | Select DisplayName, MaxSendSize, MaxReceiveSize
+Get-Mailbox | Select-Object DisplayName, MaxSendSize, MaxReceiveSize
 
 Get-Mailbox | Get-MailboxStatistics | Select-Object DisplayName, TotalItemSize, ItemCount, DeletedItemCount
 

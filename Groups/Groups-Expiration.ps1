@@ -8,12 +8,12 @@ $Report = @()
 $Today = (Get-Date)
 $GroupsinPolicy = 0
 Write-Host “Finding Groups to check…”
-$Groups = Get-UnifiedGroup | Select DisplayName, ExternalDirectoryObjectId, WhenCreated
+$Groups = Get-UnifiedGroup | Select-Object DisplayName, ExternalDirectoryObjectId, WhenCreated
 Write-Host $Groups.Count “found. Now checking expiration status.”
 ForEach ($G in $Groups) {
-    $Status = $Null
+    $Status = $null
     $Status = (Get-AzureADMSLifecyclePolicyGroup -Id $G.ExternalDirectoryObjectId).ManagedGroupTypes
-    If ($Status -ne $Null) {
+    If ($Status -ne "$null") {
         $Days = (New-TimeSpan -Start $G.WhenCreated -End $Today).Days
         $LastRenewed = (Get-AzureADMSGroup -Id $G.ExternalDirectoryObjectId).RenewedDateTime
         $NextRenewalDue = $LastRenewed.AddDays($Lifecycle)
@@ -31,4 +31,4 @@ ForEach ($G in $Groups) {
 }
 Clear-Host
 Write-Host "Total Groups in tenant:" $Groups.Count "Total Groups covered by expiration policy:" $GroupsInPolicy
-$Report | Select Group, @{n="Last Renewed"; e= {$_.LastRenewed}}, @{n="Next Renewal Due"; e={$_.NextRenewal}}, @{n="Days before Expiration"; e={$_.DaysLeft}}
+$Report | Select-Object Group, @{n="Last Renewed"; e= {$_.LastRenewed}}, @{n="Next Renewal Due"; e={$_.NextRenewal}}, @{n="Days before Expiration"; e={$_.DaysLeft}}
